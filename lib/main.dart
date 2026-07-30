@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stellar_explorer/provider/navigation_provider.dart';
+import 'package:stellar_explorer/dashboard_screens/navigator_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,27 +12,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
-    );
-  }
-}
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
-
-  @override
-  State <HomeScreen> createState () => _HomeScreenState();
-}
-
-class _HomeScreenState extends State <HomeScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Stellar Explorer"),
-        centerTitle: true,
+    return MultiProvider( 
+      providers: [
+        ChangeNotifierProvider(create: (context) => NavigationProvider(),),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData( // To remove flutter default Bottom Navigation Bar Effect
+          splashFactory: NoSplash.splashFactory,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent
+        ),
+        home: const NavigatorScreen(),
       ),
     );
   }
