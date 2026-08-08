@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stellar_explorer/provider/navigation_provider.dart';
-import 'package:stellar_explorer/dashboard_screens/navigator_screen.dart';
+import 'package:stellar_explorer/screens/dashboard_screens/navigator_screen.dart';
 
 void main() {
   runApp(const MyApp());

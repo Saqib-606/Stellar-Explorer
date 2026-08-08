@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stellar_explorer/provider/navigation_provider.dart';
-import 'package:stellar_explorer/dashboard_screens/explore_screen.dart';
-import 'package:stellar_explorer/dashboard_screens/favorites_screen.dart';
-import 'package:stellar_explorer/dashboard_screens/home_screen.dart';
-import 'package:stellar_explorer/dashboard_screens/news_screen.dart';
+import 'package:stellar_explorer/screens/dashboard_screens/explore_screen.dart';
+import 'package:stellar_explorer/screens/dashboard_screens/favorites_screen.dart';
+import 'package:stellar_explorer/screens/dashboard_screens/home_screen.dart';
+import 'package:stellar_explorer/screens/dashboard_screens/news_screen.dart';
 import 'package:stellar_explorer/utils/color_palettes.dart';
 
 class NavigatorScreen extends StatefulWidget {

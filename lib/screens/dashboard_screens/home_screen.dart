@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:stellar_explorer/screens/sub_screens/asteroids_screen.dart';
+import 'package:stellar_explorer/screens/sub_screens/exoplanets_screen.dart';
+import 'package:stellar_explorer/screens/sub_screens/iss_tracker_screen.dart';
+import 'package:stellar_explorer/screens/sub_screens/launches_screen.dart';
+import 'package:stellar_explorer/screens/sub_screens/missions_screen.dart';
+import 'package:stellar_explorer/screens/sub_screens/nasa_images_screen.dart';
+import 'package:stellar_explorer/screens/sub_screens/planets_screen.dart';
+import 'package:stellar_explorer/screens/sub_screens/space_weather_screen.dart';
 import 'package:stellar_explorer/utils/color_palettes.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -9,15 +17,47 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State <HomeScreen> {
-  final List<Map<String, dynamic>> exploreItems = const [
-    {"title": "ISS Tracker", "image": "assets/images/ISS.jpg"},
-    {"title": "Planets", "image": "assets/images/Saturn.jpg"},
-    {"title": "Asteroids", "image": "assets/images/Asteroids.jpg"},
-    {"title": "Mars Weather", "image": "assets/images/Mars.png"},
-    {"title": "NASA Images", "image": "assets/images/Galaxy.jpg"},
-    {"title": "Space News", "image": "assets/images/News.png"},
-    {"title": "Launches", "image": "assets/images/Launch.jpg"},
-    {"title": "Missions", "image": "assets/images/mission.jpg"},
+  final List<Map<String, dynamic>> quickAccessItems = [ 
+    {
+      "title": "ISS Tracker",
+      "image": "assets/images/ISS.jpg",
+      "screenBuilder": () => const IssTrackerScreen(), // () => means create screen only on user tap
+    },
+    {
+      "title": "Planets",
+      "image": "assets/images/Saturn.jpg",
+      "screenBuilder": () => const PlanetsScreen(),
+    },
+    {
+      "title": "Asteroids",
+      "image": "assets/images/Asteroids.jpg",
+      "screenBuilder": () => const AsteroidsScreen(),
+    },
+    {
+      "title": "Exoplanets",
+      "image": "assets/images/Exoplanets.jpg",
+      "screenBuilder": () => const ExoplanetsScreen(),
+    },
+    {
+      "title": "NASA Images",
+      "image": "assets/images/Galaxy.jpg",
+      "screenBuilder": () => const NasaImagesScreen(),
+    },
+    {
+      "title": "Space Weather",
+      "image": "assets/images/Space Weather.jpg",
+      "screenBuilder": () => const SpaceWeatherScreen(),
+    },
+    {
+      "title": "Launches",
+      "image": "assets/images/Launch.jpg",
+      "screenBuilder": () => const LaunchesScreen(),
+    },
+    {
+      "title": "Missions",
+      "image": "assets/images/mission.jpg",
+      "screenBuilder": () => const MissionsScreen(),
+    },
   ];
 
   @override
@@ -168,7 +208,7 @@ class _HomeScreenState extends State <HomeScreen> {
               const SizedBox(height: 10,),
 
               GridView.builder(
-                itemCount: exploreItems.length,
+                itemCount: quickAccessItems.length,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -178,8 +218,13 @@ class _HomeScreenState extends State <HomeScreen> {
                   childAspectRatio: 0.7,
                 ),
                 itemBuilder: (context, index) {
-                  final item = exploreItems[index];
+                  final item = quickAccessItems[index];
                   return InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => item["screenBuilder"](),
+                      ));
+                    },
                     child: Container(
                       clipBehavior: Clip.antiAlias,
                       decoration: BoxDecoration(
@@ -273,7 +318,11 @@ class _HomeScreenState extends State <HomeScreen> {
                                   width: 0.8
                                 )
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) => IssTrackerScreen(),
+                                ));
+                              },
                               child: const Text("View", style: TextStyle(color: ColorPalettes.primaryWhite),),
                             ),
                           )
