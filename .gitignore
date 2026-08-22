@@ -46,3 +46,6 @@ app.*.map.json
 
 # Project Learning
 lib/project_learning/my_learning.dart
+
+# api_key
+lib/services/api_constants.dart

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stellar_explorer/provider/space_weather_provider.dart';
 import 'package:stellar_explorer/utils/color_palettes.dart';
 
 class SpaceWeatherScreen extends StatefulWidget {
@@ -9,57 +11,13 @@ class SpaceWeatherScreen extends StatefulWidget {
 }
 
 class _SpaceWeatherScreenState extends State<SpaceWeatherScreen> {
-  final List<Map<String, dynamic>> solarMetrics = const [
-    {
-      "icon": Icons.air_rounded, // Solar wind
-      "title": "Solar Wind",
-      "value": "523",
-      "unit": "km/s",
-      "color": Colors.blueAccent,
-    },
-    {
-      "icon": Icons.public_rounded, // Kp-Index
-      "title": "Kp-Index",
-      "value": "4",
-      "unit": "Active",
-      "color": Colors.orangeAccent,
-    },
-    {
-      "icon": Icons.local_fire_department_rounded, // Solar Flares
-      "title": "Solar Flares",
-      "value": "M-Class",
-      "unit": "High",
-      "color": Colors.redAccent,
-    },
-    {
-      "icon": Icons.speed_rounded, // CME Speed
-      "title": "CME Speed",
-      "value": "1200",
-      "unit": "km/s",
-      "color": Colors.purpleAccent,
-    },
-  ];
-
-  final List<Map<String, dynamic>> weatherData = const [
-    {
-      "title": "Solar Flares",
-      "subtitle": "Recent Class: C-class (Last 24h)",
-      "detail": "Detailed beam observation about continuous events at...",
-      "graphColor": Colors.yellowAccent,
-    },
-    {
-      "title": "Geomagnetic Storms",
-      "subtitle": "Kp-index: 4 (Unsettled)",
-      "detail": "Detailed heliospheric observations and existences.",
-      "graphColor": Colors.orangeAccent,
-    },
-    {
-      "title": "Coronal Mass Ejections (CME)",
-      "subtitle": "Arrival Forecast: Not Expected",
-      "detail": "Arrival forecast is not expected to continue in the 24...",
-      "graphColor": Colors.greenAccent,
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<SpaceWeatherProvider>().fetchSpaceWeatherData();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,16 +100,7 @@ class _SpaceWeatherScreenState extends State<SpaceWeatherScreen> {
                             const SizedBox(height: 8,),
 
                             const Text(
-                              "Solar activity is high.",
-                              style: TextStyle(
-                                color: ColorPalettes.primaryWhite,
-                              ),
-                            ),
-
-                            const SizedBox(height: 5,),
-
-                            const Text(
-                              "Stay tuned for updates.",
+                              "CME Data Tracked",
                               style: TextStyle(
                                 color: ColorPalettes.primaryWhite,
                               ),
@@ -164,98 +113,10 @@ class _SpaceWeatherScreenState extends State<SpaceWeatherScreen> {
                 ),
               ),
 
-              const SizedBox(height: 15),
-
-              const Text(
-                "Live Metrics",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: ColorPalettes.primaryWhite,
-                  letterSpacing: 0.5,
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              GridView.builder(
-                itemCount: 4,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.zero,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  crossAxisSpacing: 5,
-                  childAspectRatio: 0.6
-                ),
-                itemBuilder: (context, index) {
-                  final metric = solarMetrics[index];
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: ColorPalettes.cardBackground,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: ColorPalettes.subTextGray.withValues(alpha: 0.15), width: 1)
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 15),
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: metric["color"].withValues(alpha: 0.15),
-                              shape: BoxShape.circle
-                            ),
-                            child: Icon(
-                              metric["icon"],
-                              color: metric["color"],
-                              size: 24,
-                            ),
-                          ),
-
-                          const SizedBox(height: 8,),
-
-                          Text(
-                            metric["title"],
-                            style: TextStyle(
-                              color: ColorPalettes.subTextGray,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),          
-
-                          const SizedBox(height: 5,),
-
-                          Text(
-                            metric["value"],
-                            style: TextStyle(
-                              color: ColorPalettes.primaryWhite,
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-
-                          const SizedBox(height: 5,),
-
-                          Text(
-                            metric["unit"],
-                            style: TextStyle(
-                              color: metric["color"],
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-
               const SizedBox(height: 15,),
 
               const Text(
-                "Weather Overview",
+                "Recent Solar Storms (CME)",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -266,85 +127,101 @@ class _SpaceWeatherScreenState extends State<SpaceWeatherScreen> {
 
               const SizedBox(height: 10,),
 
-              ListView.builder(
-                itemCount: weatherData.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.zero,
-                itemBuilder: (context, index) {
-                  final weather = weatherData[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                      decoration: BoxDecoration(
-                        color: ColorPalettes.cardBackground,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: ColorPalettes.subTextGray.withValues(alpha: 0.15), width: 1)
+              Consumer<SpaceWeatherProvider>(
+                builder: (context, provider, child) {
+                  if (provider.loading) {
+                    return Center(child: const CircularProgressIndicator(color: ColorPalettes.primaryWhite,),);
+                  }
+
+                  if (provider.errorMessage.isNotEmpty) {
+                    return Center(
+                      child: Text(
+                        provider.errorMessage,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.redAccent,
+                          fontSize: 16,
+                        ),
                       ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  weather["title"],
-                                  style: const TextStyle(
-                                    color: ColorPalettes.primaryWhite,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold
-                                  ),
-                                ),
-                                const SizedBox(height: 4,),
+                    );
+                  } 
 
-                                Text(
-                                  weather["subtitle"],
-                                  style: const TextStyle(
-                                    color: ColorPalettes.primaryWhite,
-                                    fontSize: 13,
-                                  ),
-                                ),
-                                const SizedBox(height: 4,),
-
-                                Text(
-                                  weather["detail"],
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                    color: ColorPalettes.subTextGray,
-                                    fontSize: 11,
-                                    height: 1.3
-                                  ),
-                                ),                              
-                              ],
-                            ),
-                          ),
-                          
-                          const SizedBox(width: 15),
-
-                          // Dummy Graph Placeholder (To be replaced with actual graph later)
-                          Icon(
-                            Icons.show_chart_rounded,
-                            color: weather["graphColor"],
-                            size: 35,
-                          ),
-
-                          const SizedBox(width: 15),
-                          
-                          const Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            color: ColorPalettes.subTextGray,
-                            size: 14,
-                          ),
-                        ],
+                  if (provider.spaceWeather.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "No recent solar storms reported.",
+                        style: TextStyle(color: ColorPalettes.primaryWhite),
                       ),
-                    ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    itemCount: provider.spaceWeather.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final weatherEvent = provider.spaceWeather[index];                      
+                      String stormSpeed = "Unknown Speed";
+
+                      if(weatherEvent.cmeAnalyses.isNotEmpty) {
+                        stormSpeed = "${weatherEvent.cmeAnalyses[0]['speed'] ?? 'N/A'} km/s";
+                      }
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                          decoration: BoxDecoration(
+                            color: ColorPalettes.cardBackground,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: ColorPalettes.subTextGray.withValues(alpha: 0.15), width: 1)
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Location: ${weatherEvent.sourceLocation}",
+                                      style: const TextStyle(color: ColorPalettes.primaryWhite, fontSize: 15, fontWeight: FontWeight.bold),
+                                    ),
+
+                                    const SizedBox(height: 4),
+                                    
+                                    Text(
+                                      "Time: ${weatherEvent.startTime} • Speed: $stormSpeed",
+                                      style: const TextStyle(color: Colors.tealAccent, fontSize: 12, fontWeight: FontWeight.w500),
+                                    ),
+
+                                    const SizedBox(height: 6),
+
+                                    Text(
+                                      weatherEvent.note.isEmpty ? "No detailed note provided by NASA for this event." : weatherEvent.note,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(color: ColorPalettes.subTextGray, fontSize: 12, height: 1.3),
+                                    ),                              
+                                  ],
+                                ),
+                              ),
+                              
+                              const SizedBox(width: 15),
+                              
+                              Icon(
+                                Icons.local_fire_department_rounded,
+                                color: weatherEvent.cmeAnalyses.isNotEmpty ? Colors.redAccent : Colors.orangeAccent,
+                                size: 35,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   );
-                },
+                }
               ),
-
-              const SizedBox(height: 50,),
+              const SizedBox(height: 10,),
             ],
           ),
         ),

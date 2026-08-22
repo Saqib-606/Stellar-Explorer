@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stellar_explorer/screens/detail_screens/planet_detail_screen.dart';
 import 'package:stellar_explorer/utils/color_palettes.dart';
 
 class PlanetsScreen extends StatefulWidget {
@@ -11,41 +12,49 @@ class PlanetsScreen extends StatefulWidget {
 class _PlanetsScreenState extends State <PlanetsScreen> {
   final List<Map<String, dynamic>> planets = const [
     {
+      "id" : "mercury",
       "title": "Mercury",
       "subtitle": "The Smallest Planet",
       "image": "assets/images/Mercury.png",
     },
     {
+      "id" : "venus",
       "title": "Venus",
       "subtitle": "The Hottest Planet",
       "image": "assets/images/Venus.png",
     },
     {
+      "id" : "earth",
       "title": "Earth",
       "subtitle": "Our Home",
       "image": "assets/images/ISS Earth.png",
     },
     {
+      "id" : "mars",
       "title": "Mars",
       "subtitle": "The Red Planet",
       "image": "assets/images/Mars without background.png",
     },
     {
+      "id" : "jupiter",
       "title": "Jupiter",
       "subtitle": "The Largest Planet",
       "image": "assets/images/Jupiter.png",
     },
     {
+      "id" : "saturn",
       "title": "Saturn",
       "subtitle": "The Ringed Planet",
       "image": "assets/images/Saturn without background.png",
     },
     {
+      "id" : "uranus",
       "title": "Uranus",
       "subtitle": "The Ice Gaint",
       "image": "assets/images/Uranus.png",
     },
     {
+      "id" : "neptune",
       "title": "Neptune",
       "subtitle": "The Farthest Planet",
       "image": "assets/images/Neptune.png",
@@ -82,7 +91,11 @@ class _PlanetsScreenState extends State <PlanetsScreen> {
             return Padding(
               padding: const EdgeInsets.only(bottom: 15),
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) => PlanetDetailScreen(id: planet["id"]),
+                  ));
+                },
                 child: Container(
                   decoration: BoxDecoration(
                     color: ColorPalettes.cardBackground,
