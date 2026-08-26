@@ -1,57 +1,64 @@
 # 🚀 Stellar Explorer
 
-A modern, premium **Space Exploration Companion** application built with **Flutter**, powered by **NASA Open APIs**, **The Solar System OpenData API**, and **Provider State Management**[cite: 1, 2, 14].
+A modern, premium **Space Exploration Companion** application built with **Flutter**, powered by **NASA Open APIs**, **The Solar System OpenData API**, and **Provider State Management**.
 
-The application transforms your device into an interactive space command center, enabling users to explore real-time astronomical data, track the International Space Station, monitor near-Earth asteroids, read the latest space news, and discover thousands of cosmic images[cite: 2].
+The application transforms your device into an interactive space command center, enabling users to explore real-time astronomical data, track the International Space Station, monitor near-Earth asteroids, read the latest space news, and discover thousands of cosmic images.
 
 ---
 
 ## ✨ Features
 
 ### 📸 Astronomy Picture of the Day (APOD)
-- Daily High-Definition Space Images[cite: 12]
-- Detailed Image Descriptions[cite: 12]
-- Full-Screen Viewing[cite: 12]
+
+* Daily High-Definition Space Images
+* Detailed Image Descriptions
+* Full-Screen Viewing
 
 ### 🛰️ ISS Live Tracker (Hero Feature)
-- Real-time ISS Position Tracking[cite: 12]
-- Live Latitude, Longitude, and Altitude Metrics[cite: 12, 23]
-- Current Velocity and Next Pass Information[cite: 12, 23]
+
+* Real-time ISS Position Tracking
+* Live Latitude, Longitude, and Altitude Metrics
+* Current Velocity and Next Pass Information
 
 ### ☄️ Near-Earth Asteroids (NeoWs)
-- Track Approaching Asteroids[cite: 12]
-- Hazard Status Indicators[cite: 12]
-- Distance, Speed, and Estimated Size Metrics[cite: 12]
+
+* Track Approaching Asteroids
+* Hazard Status Indicators
+* Distance, Speed, and Estimated Size Metrics
 
 ### 🌍 Earth Watch (EONET)
-- Live Global Natural Events Monitoring[cite: 7]
-- Track Severe Storms, Wildfires, and Volcanoes[cite: 7]
-- Real-time NASA Earth Observatory Data[cite: 7]
+
+* Live Global Natural Events Monitoring
+* Track Severe Storms, Wildfires, and Volcanoes
+* Real-time NASA Earth Observatory Data
 
 ### 🌌 NASA Image Gallery & Space News
-- Searchable Grid of Thousands of NASA Images[cite: 2, 13]
-- Latest Articles via Spaceflight News API[cite: 9]
-- Historic and Active Space Missions Tracker[cite: 24]
+
+* Searchable Grid of Thousands of NASA Images
+* Latest Articles via Spaceflight News API
+* Historic and Active Space Missions Tracker
 
 ### 🪐 Planetary Data & Exoplanets
-- Deep Physical Data of Solar System Planets and Moons[cite: 14]
-- Explore Newly Discovered Exoplanets[cite: 6]
+
+* Deep Physical Data of Solar System Planets and Moons
+* Explore Newly Discovered Exoplanets
 
 ### 🎨 User Interface & Architecture
-- Premium Dark Space Theme with Glassmorphism Cards[cite: 2]
-- Smooth Navigation & Pull-to-Refresh Functionality[cite: 24]
-- Clean Architecture (Presentation $\rightarrow$ Provider $\rightarrow$ Repository $\rightarrow$ API Services)[cite: 2]
+
+* Premium Dark Space Theme with Glassmorphism Cards
+* Smooth Navigation & Pull-to-Refresh Functionality
+* Clean Architecture (Presentation → Provider → Repository → API Services)
 
 ---
 
 ## 🛠️ Tech Stack
 
-- Flutter[cite: 1, 2]
-- Dart
-- Provider (State Management)[cite: 1, 2]
-- Dio (Robust REST API Networking)[cite: 1, 5]
-- NASA Open APIs (APOD, NeoWs, DONKI, EONET)[cite: 15]
-- The Solar System OpenData API[cite: 14]
+* Flutter
+* Dart
+* Provider (State Management)
+* Dio (Robust REST API Networking)
+* NASA Open APIs (APOD, NeoWs, DONKI, EONET)
+* The Solar System OpenData API
 
 ---
 
@@ -72,36 +79,24 @@ lib/
 └── main.dart
 ```
 
+---
+
 ## 🚀 Implemented Features
 
-- ✅ Splash & Onboarding Screens
-
-- ✅ Home Dashboard with Quick Access Grid
-
-- ✅ APOD Integration
-
-- ✅ Live ISS Tracking Module
-
-- ✅ Asteroid & Exoplanet Explorer
-
-- ✅ Planets & Moons Detailed Data
-
-- ✅ Earth Watch (EONET) Integration
-
-- ✅ Space Weather (DONKI) Reports
-
-- ✅ Searchable NASA Image Gallery
-
-- ✅ Upcoming Launches & Historic Missions
-
-- ✅ Space News Feed
-
-- ✅ Favorites System
-
-- ✅ Provider State Management
-
-- ✅ Custom Dark Theme UI
-
+* ✅ Splash & Onboarding Screens
+* ✅ Home Dashboard with Quick Access Grid
+* ✅ APOD Integration
+* ✅ Live ISS Tracking Module
+* ✅ Asteroid & Exoplanet Explorer
+* ✅ Planets & Moons Detailed Data
+* ✅ Earth Watch (EONET) Integration
+* ✅ Space Weather (DONKI) Reports
+* ✅ Searchable NASA Image Gallery
+* ✅ Upcoming Launches & Historic Missions
+* ✅ Space News Feed
+* ✅ Favorites System
+* ✅ Provider State Management
+* ✅ Custom Dark Theme UI
 
 ---
 
@@ -111,32 +106,45 @@ lib/
   <img src="assets/screenshots/Home_Screen.png" alt="Home Screen" width="190"/>
   <img src="assets/screenshots/Explore_Screen.png" alt="Explore Screen" width="190"/>
   <img src="assets/screenshots/News_Screen.png" alt="News Screen" width="190"/>
-  <img src="assets/screenshots/ISS_Tracker_Screen.png" alt="ISS Tracker Screen" width="190"/>
+  <img src="assets/screenshots/ISS_Tracker_ Screen.png" alt="ISS Tracker Screen" width="190"/>
 </p>
 
 ---
 
 ## 🔑 API Configuration
+
 This project relies on multiple public APIs. You need to configure your own API keys for the app to function correctly.
 
 Create the following file:
+
+```text
 lib/services/api_constants.dart
+```
 
 Add your keys in the following format:
+
+```dart
 class ApiConstants {
-  static const String baseUrl = "[https://api.nasa.gov](https://api.nasa.gov)";
+  static const String baseUrl = "https://api.nasa.gov";
+
   static const String apiKey = "YOUR_NASA_API_KEY_HERE";
-  
-  static const String baseUrlForPlanetsData = "[https://api.le-systeme-solaire.net/rest/](https://api.le-systeme-solaire.net/rest/)";
+
+  static const String baseUrlForPlanetsData =
+      "https://api.le-systeme-solaire.net/rest/";
+
   static const String apiKeyForPlanetsData = "YOUR_UUID_KEY_HERE";
 }
+```
 
 Get your free API keys:
-NASA API Key: api.nasa.gov
 
-Solar System OpenData API Token: api.le-systeme-solaire.net/generatekey.html
+**NASA API Key:**
+https://api.nasa.gov
 
-(Note: The ISS Tracker, Earth Watch, NASA Image Library, and Launch Library 2 (Dev) APIs do not require API keys and will work out of the box).
+**Solar System OpenData API Token:**
+https://api.le-systeme-solaire.net/generatekey.html
+
+> **Note:** The ISS Tracker, Earth Watch, NASA Image Library, and Launch Library 2 (Dev) APIs do not require API keys and will work out of the box.
 
 ---
 
