@@ -70,7 +70,7 @@ lib/
 ├── utils/
 ├── widgets/
 └── main.dart
-
+```
 
 ## 🚀 Implemented Features
 
