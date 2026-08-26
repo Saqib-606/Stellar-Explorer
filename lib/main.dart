@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stellar_explorer/provider/earth_watch_provider.dart';
+import 'package:stellar_explorer/provider/iss_location_provider.dart';
 import 'package:stellar_explorer/provider/iss_provider.dart';
 import 'package:stellar_explorer/provider/launches_provider.dart';
 import 'package:stellar_explorer/provider/mission_provider.dart';
@@ -11,7 +13,7 @@ import 'package:stellar_explorer/provider/apod_provider.dart';
 import 'package:stellar_explorer/provider/nasa_image_provider.dart';
 import 'package:stellar_explorer/provider/space_news_provider.dart';
 import 'package:stellar_explorer/provider/space_weather_provider.dart';
-import 'package:stellar_explorer/screens/dashboard_screens/navigator_screen.dart';
+import 'package:stellar_explorer/screens/splash_screen/splash_screen.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -31,9 +33,11 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => SpaceWeatherProvider()),
         ChangeNotifierProvider(create: (context) => PlanetsProvider()),
         ChangeNotifierProvider(create: (context) => IssProvider()),
+        ChangeNotifierProvider(create: (context) => IssLocationProvider()),
         ChangeNotifierProvider(create: (context) => SpaceNewsProvider()),
         ChangeNotifierProvider(create: (context) => LaunchesProvider()),
         ChangeNotifierProvider(create: (context) => MissionProvider()),
+        ChangeNotifierProvider(create: (context) => EarthWatchProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -42,7 +46,7 @@ class MyApp extends StatelessWidget {
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent
         ),
-        home: const NavigatorScreen(),
+        home: const SplashScreen(),
       ),
     );
   }

@@ -22,8 +22,15 @@ class LaunchesProvider extends ChangeNotifier {
   }
 
   Future <void> refreshLaunchesData() async {
-    launchesData.clear();    
-    await fetchLaunchesData();
+    launchesData.clear();
+    errorMessage ="";
+    try {
+      launchesData = await api.getLaunchesData();
+    } catch (e) {
+      errorMessage = e.toString();
+    } finally {
+      NotificationListener;
+    }
   }
 
   void showLoading(bool value) {

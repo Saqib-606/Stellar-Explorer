@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:stellar_explorer/models/apod_model.dart';
 import 'package:stellar_explorer/models/asteroids_model.dart';
+import 'package:stellar_explorer/models/earth_watch_model.dart';
 import 'package:stellar_explorer/models/exoplanets_model.dart';
+import 'package:stellar_explorer/models/iss_location_model.dart';
 import 'package:stellar_explorer/models/iss_model.dart';
 import 'package:stellar_explorer/models/launches_model.dart';
 import 'package:stellar_explorer/models/nasa_images_model.dart';
@@ -32,7 +35,7 @@ class ApiServices {
     )
   );
 
-  // For NASA Image Library and ISS Tracker beacuse these 2 API Services doesn't require any api key or authorization.
+  // For API Services that doesn't require any api key or authorization.
   final Dio plainDio = Dio();
 
   // Astronomy Picture of the Day
@@ -267,6 +270,58 @@ class ApiServices {
       final List<dynamic> rawData = response.data["results"];
       List<LaunchesModel> missionsList = rawData.map((json) => LaunchesModel.fromJson(json)).toList();
       return missionsList;
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout) {
+        throw Exception("Connection Timeout");
+      } else if (e.type == DioExceptionType.connectionError) {
+        throw Exception("No Internet Connection");
+      } else {
+        throw Exception("Server Error: ${e.response?.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("Something went wrong: $e");
+    }
+  }
+
+  // Earth Watch
+  Future<List<EarthWatchModel>> getEarthWatchData() async {
+    try {
+      final response = await plainDio.get(
+        "https://eonet.gsfc.nasa.gov/api/v3/events",
+        queryParameters: {
+          "status": "open", 
+          "limit": 30      
+        }
+      );   
+      final Map<String, dynamic> jsonData = response.data is String ? jsonDecode(response.data) : response.data;
+      final List<dynamic> rawData = jsonData["events"] ?? [];
+      List<EarthWatchModel> earthWatchList = rawData.map((json) => EarthWatchModel.fromJson(json)).toList();
+      return earthWatchList;
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout) {
+        throw Exception("Connection Timeout");
+      } else if (e.type == DioExceptionType.connectionError) {
+        throw Exception("No Internet Connection");
+      } else {
+        throw Exception("Server Error: ${e.response?.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("Something went wrong: $e");
+    }
+  }
+
+  // ISS Exact Location Through Latitude and Longitude
+  Future <IssLocationModel> getISSLocation(double lat, double lon) async {
+    try {
+      final response = await plainDio.get(
+        "https://api.bigdatacloud.net/data/reverse-geocode-client",
+        queryParameters: {
+          "latitude": lat,
+          "longitude": lon,
+          "localityLanguage": "en", 
+        },
+      );
+      return IssLocationModel.fromJson(response.data);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionTimeout) {
         throw Exception("Connection Timeout");

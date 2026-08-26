@@ -22,8 +22,15 @@ class MissionProvider extends ChangeNotifier {
   }
 
   Future <void> refreshMissionsData() async {
-    missionData.clear();    
-    await fetchMissionsData();
+    missionData.clear();
+    errorMessage = "";
+    try {
+      missionData = await api.getMissionsData();
+    } catch (e) {
+      errorMessage = e.toString();
+    } finally {
+      notifyListeners();
+    }
   }
 
   void showLoading(bool value) {

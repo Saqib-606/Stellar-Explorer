@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stellar_explorer/provider/iss_location_provider.dart';
 import 'package:stellar_explorer/provider/iss_provider.dart';
 import 'package:stellar_explorer/utils/color_palettes.dart';
 
@@ -7,15 +8,25 @@ class IssTrackerScreen extends StatefulWidget {
   const IssTrackerScreen({super.key});
 
   @override
-  State <IssTrackerScreen> createState () => _ISSTrackerScreenState();
+  State<IssTrackerScreen> createState() => _ISSTrackerScreenState();
 }
 
-class _ISSTrackerScreenState extends State <IssTrackerScreen> {
+class _ISSTrackerScreenState extends State<IssTrackerScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<IssProvider>().getISSTrackerData();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final issProvider = context.read<IssProvider>();
+      final locationProvider = context.read<IssLocationProvider>();
+
+      await issProvider.getISSTrackerData();
+
+      if (issProvider.issTracker != null) {
+        locationProvider.fetchISSLocation(
+          issProvider.issTracker!.latitude,
+          issProvider.issTracker!.longitude,
+        );
+      }
     });
   }
 
@@ -26,7 +37,7 @@ class _ISSTrackerScreenState extends State <IssTrackerScreen> {
       appBar: AppBar(
         backgroundColor: ColorPalettes.mainBackground,
         elevation: 0,
-        scrolledUnderElevation: 0,  
+        scrolledUnderElevation: 0,
         iconTheme: const IconThemeData(color: ColorPalettes.primaryWhite),
         title: const Text(
           "ISS Tracker",
@@ -34,14 +45,14 @@ class _ISSTrackerScreenState extends State <IssTrackerScreen> {
             color: ColorPalettes.primaryWhite,
             fontSize: 24,
             fontWeight: FontWeight.bold,
-            letterSpacing: 1.2
+            letterSpacing: 1.2,
           ),
         ),
         centerTitle: true,
       ),
-      body: Consumer<IssProvider>(
-        builder: (context, provider, child) {
-          if (provider.loading) {
+      body: Consumer2<IssProvider, IssLocationProvider>(
+        builder: (context, issprovider, isslocationprovider, child) {
+          if (issprovider.loading) {
             return const Center(
               child: CircularProgressIndicator(
                 color: ColorPalettes.primaryWhite,
@@ -49,19 +60,18 @@ class _ISSTrackerScreenState extends State <IssTrackerScreen> {
             );
           }
 
-          if (provider.errorMessage.isNotEmpty) {
+          if (issprovider.errorMessage.isNotEmpty) {
             return Center(
               child: Text(
-                provider.errorMessage,
+                issprovider.errorMessage,
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Colors.redAccent, fontSize: 16),
               ),
             );
           }
 
-          final issData = provider.issTracker;
+          final issData = issprovider.issTracker;
 
-          // Conversion of ISS Timestamp to Readable Format 
           String formatTimestamp(int? timestamp) {
             if (timestamp == null || timestamp == 0) return "N/A";
             final dateTime = DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
@@ -72,7 +82,6 @@ class _ISSTrackerScreenState extends State <IssTrackerScreen> {
             return "$hour:$minute:$second $amPm";
           }
 
-          // Conversion of Latitude To North OR South
           String formatLatitude(double? lat) {
             if (lat == null) return "N/A";
             if (lat < 0) {
@@ -82,7 +91,6 @@ class _ISSTrackerScreenState extends State <IssTrackerScreen> {
             }
           }
 
-          // Conversion of Longitude To East OR West
           String formatLongitude(double? lon) {
             if (lon == null) return "N/A";
             if (lon < 0) {
@@ -100,6 +108,14 @@ class _ISSTrackerScreenState extends State <IssTrackerScreen> {
             {"title" : "Visibility", "value" : "${issData?.visibility}"},
             {"title" : "Updated At", "value" : formatTimestamp(issData?.timeStamp)},
           ]; 
+
+          String locationText = "Detecting...";
+          if (!isslocationprovider.loading && isslocationprovider.issLocation != null) {
+            final loc = isslocationprovider.issLocation!;
+            locationText = loc.country.isEmpty ? loc.locality : "${loc.locality}, ${loc.country}";
+          } else if (isslocationprovider.errorMessage.isNotEmpty) {
+            locationText = "Location Unavailable";
+          }
 
           return SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
@@ -147,7 +163,7 @@ class _ISSTrackerScreenState extends State <IssTrackerScreen> {
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       crossAxisSpacing: 10,
                       mainAxisSpacing: 10,
@@ -167,7 +183,7 @@ class _ISSTrackerScreenState extends State <IssTrackerScreen> {
                               padding: const EdgeInsets.only(left: 15, top: 15),
                               child: Text(
                                 iss["title"],
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: ColorPalettes.subTextGray,
                                   fontSize: 11
                                 ),
@@ -180,7 +196,7 @@ class _ISSTrackerScreenState extends State <IssTrackerScreen> {
                               padding: const EdgeInsets.only(left: 15),
                               child: Text(
                                 iss["value"],
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                   color: ColorPalettes.primaryWhite
                                 ),
@@ -208,32 +224,34 @@ class _ISSTrackerScreenState extends State <IssTrackerScreen> {
                     ),
                     child: Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 25, top: 20),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                "Current Position",
-                                style: TextStyle(color: ColorPalettes.primaryWhite, fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                    
-                              const Text(
-                                "The ISS is currently over",
-                                style: TextStyle(color: ColorPalettes.primaryWhite),
-                              ),
-                    
-                              const SizedBox(height: 5),
-                    
-                              Text(
-                                "Indian Ocean",
-                                style: TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                            ],
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 25, top: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Current Position",
+                                  style: TextStyle(color: ColorPalettes.primaryWhite, fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                      
+                                const Text(
+                                  "The ISS is currently over",
+                                  style: TextStyle(color: ColorPalettes.primaryWhite),
+                                ),
+                      
+                                const SizedBox(height: 5),
+                      
+                                Text(
+                                  locationText,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                    
-                        const Spacer(), 
                     
                         ClipRRect(
                           borderRadius: const BorderRadius.only(
@@ -242,16 +260,20 @@ class _ISSTrackerScreenState extends State <IssTrackerScreen> {
                           ),
                           child: Opacity(
                             opacity: 0.6,
-                            child: Icon(
-                              Icons.public,
-                              color: ColorPalettes.primaryWhite,
-                              size: 60,
+                            child: Container(
+                              padding: const EdgeInsets.only(right: 15),
+                              child: const Icon(
+                                Icons.public,
+                                color: ColorPalettes.primaryWhite,
+                                size: 60,
+                              ),
                             ), 
                           ),
                         ),
                       ],
                     ),
                   ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),

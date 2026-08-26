@@ -82,25 +82,30 @@ class _HomeScreenState extends State <HomeScreen> {
           await context.read<ApodProvider>().refreshAPOD();
         },
         child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(  // Placing AlwaysScrollable is necessary for Refresh Indicator widget.
-            parent: BouncingScrollPhysics()  // Gives a iOS-style bounce effect
+          physics: const AlwaysScrollableScrollPhysics( // Placing AlwaysScrollable is necessary for Refresh Indicator widget.
+            parent: BouncingScrollPhysics() // Gives a iOS-style bounce effect
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Icon(Icons.star, color: ColorPalettes.primaryWhite,),
-            
-                    const Icon(Icons.notifications_rounded, color: ColorPalettes.primaryWhite,)
-                  ],
+                Container(
+                  height: 45, 
+                  width: 45,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                  ),
+                  child: Image.asset(
+                    "assets/images/Logo.png", 
+                    fit: BoxFit.cover, 
+                    filterQuality: FilterQuality.high,
+                  ),
                 ),
-                  
-                const SizedBox(height: 15,),
-                  
+
+                const SizedBox(height: 5,),
+                                    
                 const Text(
                   "Stellar Explorer",
                   style: TextStyle(
@@ -109,6 +114,8 @@ class _HomeScreenState extends State <HomeScreen> {
                     color: ColorPalettes.primaryWhite
                   ),
                 ),
+
+                const SizedBox(height: 5,),
                   
                 const Text(
                   "Explore the Universe",
@@ -386,11 +393,11 @@ class _HomeScreenState extends State <HomeScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("ISS Above You", style: TextStyle(color: ColorPalettes.primaryWhite),),
+                            const Text("ISS Above You", style: TextStyle(color: ColorPalettes.primaryWhite, fontWeight: FontWeight.bold)),
                             
                             const SizedBox(height: 5,),
                         
-                            Text("Next Pass in 42 Mints", style: TextStyle(color: ColorPalettes.primaryWhite),),
+                            Text("Track live location", style: TextStyle(color: ColorPalettes.primaryWhite),),
                         
                             const SizedBox(height: 8,),
                         
@@ -433,7 +440,7 @@ class _HomeScreenState extends State <HomeScreen> {
                   ),
                 ),
         
-                const SizedBox(height: 10,),
+                const SizedBox(height: 20,),
               ],
             ),
           ),

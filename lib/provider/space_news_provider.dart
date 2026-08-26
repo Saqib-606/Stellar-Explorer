@@ -43,6 +43,18 @@ class SpaceNewsProvider extends ChangeNotifier {
     }
   }
 
+  Future <void> refreshSpaceNewsData () async {
+    spaceNews.clear();
+    errorMessage = "";
+    try {
+      spaceNews = await api.getSpaceNews();
+    } catch (e) {
+      errorMessage = e.toString();
+    } finally {
+      notifyListeners();
+    }
+  }
+
   void showLoading (bool value) {
     loading = value;
     notifyListeners();
