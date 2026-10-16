@@ -115,8 +115,7 @@ class _AstronomyPictureDetailScreenState extends State<AstronomyPictureDetailScr
                   const SizedBox(height: 10),
 
                   Text(
-                    widget.apodData.explanation,
-                    textAlign: TextAlign.justify,
+                    widget.apodData.explanation.replaceAll(RegExp(r'<[^>]*>'), ''),
                     style: TextStyle(
                       color: ColorPalettes.primaryWhite.withValues(alpha: 0.9), 
                       fontSize: 15,

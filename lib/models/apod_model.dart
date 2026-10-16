@@ -24,11 +24,10 @@ class ApodModel {
       title: json["title"] ?? "No Title",
       date: json["date"] ?? "",
       explanation: json["explanation"]?? "",
-      url: json["url"] ?? "",
-      hdurl: json["hdurl"],
+      url: json["hdurl"] ?? "",
       mediaType: json["media_type"] ?? "",
       copyright: json["copyright"],
-      serviceversion: json["service_version"] ?? "",
+      serviceversion: json["service_version"] ?? "v1",
     );
   }
 }

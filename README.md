@@ -129,8 +129,7 @@ class ApiConstants {
 
   static const String apiKey = "YOUR_NASA_API_KEY_HERE";
 
-  static const String baseUrlForPlanetsData =
-      "https://api.le-systeme-solaire.net/rest/";
+  static const String baseUrlForPlanetsData = "https://api.le-systeme-solaire.net/rest/";
 
   static const String apiKeyForPlanetsData = "YOUR_UUID_KEY_HERE";
 }

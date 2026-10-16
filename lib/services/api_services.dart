@@ -41,8 +41,10 @@ class ApiServices {
   // Astronomy Picture of the Day
   Future <ApodModel> getAPOD () async {
     try {
-      final response = await dio.get("/planetary/apod");
-      return ApodModel.fromJson(response.data);
+      final response = await dio.get("https://science.nasa.gov/wp-json/wp/v2/apod-basic");
+      List<dynamic> rawData = response.data;
+      Map<String, dynamic> firstItem = rawData[0] as Map<String,dynamic>;
+      return ApodModel.fromJson(firstItem);
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionTimeout) {
         throw Exception("Connection Timeout");
@@ -144,7 +146,15 @@ class ApiServices {
   Future <List<SpaceWeatherModel>> getSpaceWeatherData () async {
     try {
       final response = await dio.get("https://api.nasa.gov/DONKI/CME");
-      List<dynamic> rawData = response.data;
+      List<dynamic> rawData;
+      if (response.data is String) {
+        if (response.data.toString().trim().startsWith('<')) {
+          throw Exception("NASA API is currently down or returning invalid data.");
+        }
+        rawData = jsonDecode(response.data);
+      } else {
+        rawData = response.data;
+      }
       List <SpaceWeatherModel> spaceWeatherData = rawData.map((weatherJson) {
         return SpaceWeatherModel.fromJson(weatherJson);
       }).toList();
